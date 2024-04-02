@@ -8,13 +8,21 @@
 import Foundation
 import Moya
 
-class MoviesApiProvider {
+protocol PopularMovieProviderProtocol {
+    func getPopularMovies(page: Int, completion: @escaping (Result<PopularMovieResponse, Error>) -> ())
+}
+
+class MoviesApiProvider: PopularMovieProviderProtocol {
     
     private let provider: MoyaProvider<MoviesApi>
     
     init() {
-        let logger = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
-        provider = MoyaProvider<MoviesApi>(plugins: [logger])
+        let networkLogger: NetworkLoggerPlugin = {
+            let networkLogger = NetworkLoggerPlugin()
+            networkLogger.configuration.logOptions = .verbose
+            return networkLogger
+        }()
+        provider = MoyaProvider<MoviesApi>(plugins: [networkLogger])
     }
     
     func getPopularMovies(page: Int, completion: @escaping (Result<PopularMovieResponse, Error>) -> ()) {

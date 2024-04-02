@@ -19,7 +19,7 @@ struct PopularMovieResponse: Codable {
     }
 }
 
-struct Movie: Codable {
+struct Movie: Codable, Hashable {
     let id: Int
     let overview: String
     let posterPath, releaseDate, title: String

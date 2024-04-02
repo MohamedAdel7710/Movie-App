@@ -9,12 +9,14 @@ import Foundation
 
 class MoviesViewModel: ObservableObject {
     @Published var moviesList: [Movie] = []
+    let movieProvider : PopularMovieProviderProtocol
     var page: Int = 1
-    init(){
-        fetchMovies()
+    
+    init(movieProvider: PopularMovieProviderProtocol = MoviesApiProvider()){
+        self.movieProvider = movieProvider
     }
+    
     func fetchMovies(page: Int = 1) {
-        let movieProvider = MoviesApiProvider()
         movieProvider.getPopularMovies(page: page) { [weak self] result in
             switch result {
             case .success(let response):
